@@ -1,4 +1,3 @@
-// Define your GraphQL schema using the gql tag
 const typeDefs = `
   type Book {
     id: ID
@@ -16,10 +15,8 @@ const typeDefs = `
   }
 `;
 
-// Store book data in memory for simplicity
 let books = [];
 
-// Provide resolver functions for the defined schema
 const resolvers = {
   Query: {
     books: () => books,
