@@ -5,13 +5,17 @@ const express = require('express');
 const http = require('http');
 const cors = require('cors');
 const { json } = require('body-parser');
-const { typeDefs, resolvers } = require('./schema');
+
+const typeDefs = require('./graphql/combinedTypes');
+const resolvers = require('./graphql/combinedResolvers');
 
 const app = express();
 const httpServer = http.createServer(app);
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    // introspection: false,
+    introspection: process.env.NODE_ENV !== 'production',
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
 });
 
