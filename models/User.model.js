@@ -38,16 +38,5 @@ schema.pre("save", async function (next) {
     next();
 });
 
-schema.methods.toJSON = function () {
-    let obj = this.toObject();
-
-    delete obj.password;
-    delete obj.createdAt;
-    delete obj.updatedAt;
-    delete obj.__v;
-
-    return obj;
-};
-
 const model = mongoose.model("User", schema);
 module.exports = { UserModel: model };
