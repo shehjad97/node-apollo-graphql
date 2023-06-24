@@ -7,6 +7,8 @@ const http = require('http');
 const cors = require('cors');
 const { json } = require('body-parser');
 
+const { getUser } = require('./utils/auth');
+
 require("./config/mongoose");
 
 const typeDefs = require('./graphql/combinedTypes');
@@ -24,13 +26,18 @@ const server = new ApolloServer({
 
 async function startServer() {
     await server.start();
-    
+
     app.use(
         '/graphql',
         cors(),
         json(),
         expressMiddleware(server, {
-            context: async ({ req }) => ({ token: req.headers.token }),
+            context: async ({ req }) => {
+                const token = req.headers.authorization || '';
+                const user = await getUser(token);
+                console.log(user)
+                return { user }
+            },
         }),
     );
 
