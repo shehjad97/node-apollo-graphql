@@ -15,19 +15,15 @@ const authResolvers = {
                     throw new Error('User already exists');
                 }
 
-                const hashedPassword = await bcrypt.hash(password, 8);
                 const user = new UserModel({
                     username,
                     email,
-                    password: hashedPassword,
+                    password,
                     superAdmin: false,
                 });
                 await user.save();
 
-                const userData = user.toObject();
-                delete userData.password;
-
-                return { user: userData };
+                return { user };
             } catch (error) {
                 throw new Error(error.message);
             }
@@ -39,18 +35,15 @@ const authResolvers = {
                     throw new Error('Invalid credentials');
                 }
 
-                // const isPasswordMatch = await bcrypt.compare(password, user.password);
-                // if (!isPasswordMatch) {
-                //     throw new Error('Invalid credentials');
-                // }
+                const isPasswordMatch = await bcrypt.compare(password, user.password);
+                if (!isPasswordMatch) {
+                    throw new Error('Invalid credentials');
+                }
 
                 const accessToken = generateAccessToken(user);
                 const refreshToken = generateRefreshToken(user);
 
-                const userData = user.toObject();
-                delete userData.password;
-
-                return { user: userData, accessToken, refreshToken };
+                return { user, accessToken, refreshToken };
             } catch (error) {
                 throw new Error(error.message);
             }
