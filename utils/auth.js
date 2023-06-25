@@ -6,7 +6,7 @@ const generateAccessToken = (user) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: `${process.env.JWT_ACCESS_EXPIRATION}`,
+        expiresIn: process.env.JWT_ACCESS_EXPIRATION,
     });
 
     return token;
@@ -18,7 +18,7 @@ const generateRefreshToken = (user) => {
     };
 
     const token = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: `${process.env.JWT_REFRESH_EXPIRATION}`,
+        expiresIn: process.env.JWT_REFRESH_EXPIRATION,
     });
 
     return token;
