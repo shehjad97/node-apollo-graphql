@@ -1,8 +1,9 @@
-const { TestModel } = require('./../../models/Test.model');
+const { TestModel } = require('../../models/Test.model');
 
 const testResolvers = {
     Query: {
-        getAllTests: async () => {
+        getAllTests: async (_, args, context) => {
+            console.log("context", context.user.username)
             try {
                 const tests = await TestModel.find();
                 return tests;

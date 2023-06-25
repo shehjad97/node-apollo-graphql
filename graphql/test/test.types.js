@@ -6,6 +6,11 @@ const testType = `
     updatedAt: String!
   }
 
+  type DeleteTestResponse {
+    success: Boolean!
+    message: String
+  }
+
   type Query {
     getTest(id: ID!): Test!
     getAllTests: [Test!]!
@@ -15,11 +20,6 @@ const testType = `
     createTest(dummyText: String!): Test!
     updateTest(id: ID!, dummyText: String!): Test!
     deleteTest(id: ID!): DeleteTestResponse!
-  }
-
-  type DeleteTestResponse {
-    success: Boolean!
-    message: String
   }
 `;
 

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const { UserModel } = require('../models/User.model');
+
 const generateAccessToken = (user) => {
     const payload = {
         userId: user._id,
@@ -33,13 +35,14 @@ const verifyRefreshToken = (refreshToken) => {
     }
 };
 
-const getUser = (req) => {
+const getUser = async (req) => {
     const token = req.headers.authorization || '';
     if (token) {
         let tokenValue = token.replace('Bearer ', '');
 
         try {
-            const user = jwt.verify(tokenValue, process.env.JWT_ACCESS_SECRET);
+            const decoded = jwt.verify(tokenValue, process.env.JWT_ACCESS_SECRET);
+            const user = await UserModel.findById(decoded.userId, {username: true, email: true, superAdmin: true});
             return user;
         } catch (error) {
             console.error('Token verification error:', error);

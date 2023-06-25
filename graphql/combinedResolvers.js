@@ -1,7 +1,9 @@
-const authResolvers = require('./auth/resolvers');
-const bookResolvers = require('./book/resolvers');
-const testResolvers = require('./test/resolvers');
+const authResolvers = require('./auth/auth.resolvers');
+const userResolvers = require('./user/user.resolvers');
+const testResolvers = require('./test/test.resolvers');
+const contentResolvers = require('./content/content.resolvers');
+const crewResolvers = require('./crew/crew.resolvers');
 
-const combinedResolvers = [authResolvers, bookResolvers, testResolvers];
+const combinedResolvers = [authResolvers, userResolvers, testResolvers, contentResolvers, crewResolvers];
 
 module.exports = combinedResolvers;

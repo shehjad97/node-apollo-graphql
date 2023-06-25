@@ -24,7 +24,7 @@ const schema = new Schema({
     },
     superAdmin: {
         type: Boolean,
-        required: true,
+        required: false,
     },
 }, { timestamps: true });
 

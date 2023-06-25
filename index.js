@@ -34,7 +34,6 @@ async function startServer() {
         expressMiddleware(server, {
             context: async ({ req }) => {
                 const user = await getUser(req);
-                console.log(user)
                 return { user }
             },
         }),

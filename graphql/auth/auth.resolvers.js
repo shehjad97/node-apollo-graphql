@@ -1,13 +1,15 @@
 const bcrypt = require('bcrypt');
 
-const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('./../../utils/auth');
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('../../utils/auth');
 
-const { UserModel } = require('./../../models/User.model');
+const { UserModel } = require('../../models/User.model');
 
 const authResolvers = {
     Mutation: {
         register: async (_, { username, email, password }) => {
             try {
+                const isSuperAdmin = await UserModel.countDocuments() === 0;
+
                 const existingUser = await UserModel.findOne({
                     $or: [{ username }, { email }],
                 });
@@ -19,7 +21,7 @@ const authResolvers = {
                     username,
                     email,
                     password,
-                    superAdmin: false,
+                    superAdmin: isSuperAdmin,
                 });
                 await user.save();
 
