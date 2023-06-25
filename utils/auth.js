@@ -16,14 +16,19 @@ const generateToken = (user) => {
     return { accessToken };
 }
 
-const getUser = (token) => {
+const getUser = (req) => {
+    const token = req.headers.authorization || '';
     if (token) {
-        const tokenValue = token.replace('Bearer ', '');
-        const user = jwt.verify(tokenValue, process.env.JWT_ACCESS_SECRET);
-        // const user = process.env.JWT_ACCESS_SECRET;
-        return user;
-    }
+        let tokenValue = token.replace('Bearer ', '');
 
+        try {
+            const user = jwt.verify(tokenValue, process.env.JWT_ACCESS_SECRET);
+            return user;
+        } catch (error) {
+            console.error('Token verification error:', error);
+            return null;
+        }
+    }
     return null;
 }
 

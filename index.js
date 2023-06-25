@@ -33,8 +33,7 @@ async function startServer() {
         json(),
         expressMiddleware(server, {
             context: async ({ req }) => {
-                const token = req.headers.authorization || '';
-                const user = await getUser(token);
+                const user = await getUser(req);
                 console.log(user)
                 return { user }
             },
