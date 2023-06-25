@@ -66,6 +66,23 @@ const authResolvers = {
                 throw new Error('Invalid refresh token');
             }
         },
+        makeAdmin: async (_, { userId }) => {
+            try {
+                const user = await UserModel.findByIdAndUpdate(
+                    userId,
+                    { superAdmin: true },
+                    { new: true }
+                );
+
+                if (!user) {
+                    throw new Error('User not found');
+                }
+
+                return { user };
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        },
     },
 };
 
