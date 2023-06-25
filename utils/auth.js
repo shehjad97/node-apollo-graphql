@@ -2,12 +2,12 @@ const jwt = require('jsonwebtoken');
 const moment = require("moment");
 
 const generateToken = (user) => {
-    const accessExpiration = moment().add(parseInt(process.env.JWT_ACCESS_EXPIRATION_MINUTES), "minutes");
+    const accessExpiration = moment().add(parseInt(process.env.JWT_ACCESS_EXPIRATION), "days");
     const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_ACCESS_SECRET, {
         expiresIn: accessExpiration,
     });
 
-    // const refreshExpiration = moment().add(parseInt(process.env.JWT_REFRESH_EXPIRATION_DAYS), "days");
+    // const refreshExpiration = moment().add(parseInt(process.env.JWT_REFRESH_EXPIRATION), "days");
     // const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, {
     //     expiresIn: refreshExpiration,
     // });
