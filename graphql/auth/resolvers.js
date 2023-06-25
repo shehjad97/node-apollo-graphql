@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 
-const { generateToken } = require('./../../utils/auth');
+const { generateAccessToken, generateRefreshToken, verifyRefreshToken } = require('./../../utils/auth');
 
 const { UserModel } = require('./../../models/User.model');
 
@@ -44,14 +44,31 @@ const authResolvers = {
                 //     throw new Error('Invalid credentials');
                 // }
 
-                const { accessToken } = generateToken(user);
+                const accessToken = generateAccessToken(user);
+                const refreshToken = generateRefreshToken(user);
 
                 const userData = user.toObject();
                 delete userData.password;
 
-                return { user: userData, accessToken };
+                return { user: userData, accessToken, refreshToken };
             } catch (error) {
                 throw new Error(error.message);
+            }
+        },
+        refreshToken: async (_, { refreshToken }) => {
+            try {
+                const data = verifyRefreshToken(refreshToken);
+
+                const user = await UserModel.findById(data.userId);
+                if (!user) {
+                    throw new Error('User not found');
+                }
+
+                const accessToken = generateAccessToken(user);
+
+                return { accessToken };
+            } catch (error) {
+                throw new Error('Invalid refresh token');
             }
         },
     },

@@ -1,17 +1,37 @@
 const jwt = require('jsonwebtoken');
 
-const generateToken = (user) => {
-    const accessToken = jwt.sign({ userId: user._id }, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: `${process.env.JWT_ACCESS_EXPIRATION}d`,
+const generateAccessToken = (user) => {
+    const payload = {
+        userId: user._id,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, {
+        expiresIn: `${process.env.JWT_ACCESS_EXPIRATION}`,
     });
 
-    // const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, {
-    //     expiresIn: `${process.env.JWT_REFRESH_EXPIRATION}d`,
-    // });
+    return token;
+};
 
-    // return { accessToken, refreshToken };
-    return { accessToken };
-}
+const generateRefreshToken = (user) => {
+    const payload = {
+        userId: user._id,
+    };
+
+    const token = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+        expiresIn: `${process.env.JWT_REFRESH_EXPIRATION}`,
+    });
+
+    return token;
+};
+
+const verifyRefreshToken = (refreshToken) => {
+    try {
+        const data = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        return data;
+    } catch (error) {
+        throw new Error('Invalid refresh token');
+    }
+};
 
 const getUser = (req) => {
     const token = req.headers.authorization || '';
@@ -29,4 +49,4 @@ const getUser = (req) => {
     return null;
 }
 
-module.exports = { generateToken, getUser }
+module.exports = { generateAccessToken, generateRefreshToken, verifyRefreshToken, getUser }
