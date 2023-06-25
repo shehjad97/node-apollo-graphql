@@ -3,7 +3,9 @@ const { TestModel } = require('../../models/Test.model');
 const testResolvers = {
     Query: {
         getAllTests: async (_, args, context) => {
-            console.log("context", context.user.username)
+            if (!context.user || context.user.superAdmin === false) {
+                throw new Error('Access denied');
+            }
             try {
                 const tests = await TestModel.find();
                 return tests;
